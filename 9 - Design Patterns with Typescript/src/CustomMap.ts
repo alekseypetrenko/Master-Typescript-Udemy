@@ -7,6 +7,7 @@ interface Mappable {
 
 export class CustomMap {
   private googleMap: google.maps.Map;
+  private infoWindow: google.maps.InfoWindow;
 
   constructor(divId: string){
     this.googleMap = new google.maps.Map(document.getElementById(divId), {
@@ -16,15 +17,23 @@ export class CustomMap {
         lng: 0
       }
     });
+    this.infoWindow = new google.maps.InfoWindow({
+      content: `Hi there`
+    })
+    
   }
 
   addMarker(mappable: Mappable): void{
-    new google.maps.Marker({
+    const marker = new google.maps.Marker({
       map: this.googleMap,
       position: {
         lat: mappable.location.lat,
         lng: mappable.location.lng
       }
+    })
+
+    marker.addListener("click", () => {
+      this.infoWindow.open(this.googleMap, marker)
     })
   }
 }
